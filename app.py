@@ -33,7 +33,7 @@ def init():
     module.g.connections = Connection
 
 
-@module.unload
+@module.unloaded
 def deinit():
     module.g.redis.connection_pool.disconnect()
     module.g.http_server.stop()
