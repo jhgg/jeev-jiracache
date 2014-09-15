@@ -220,7 +220,7 @@ def webhook():
 
 def update_issue(key):
     issue = module.g.client.issue(key, expand="renderedFields")
-    module.g.index(issue)
+    module.g.index.index(issue)
     module.g.index.boost(issue.key)
     module.g.connections.publish_updated_issue(
         raw=issue.raw,
