@@ -19,7 +19,8 @@ More documentation will probably come soon. However, this is really just an inte
 ## Installing
 In your jeev directory, (the one made with `jeev init`), clone this repo
 
-    $ git clone https://github.com/jhgg/jeev-jiracache
+    $ cd modules
+    $ git clone https://github.com/jhgg/jeev-jiracache jiracache
     
 Then just add it to the config, and set the configuration variables. You should
 probably refer to the python jira module documentation to generate the oauth tokens. Then just make sure
