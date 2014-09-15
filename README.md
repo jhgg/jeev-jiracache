@@ -5,6 +5,8 @@ Exposes a web-server that runs an indexed redis jira cache.
 More documentation will probably come soon. However, this is really just an internal module used by SilverLogic 
 (https://tsl.io).
 
+![Cache's web interface in action](example.gif)
+
 # Configuration variables
 
 ## `JEEV_JIRACACHE_OAUTH_ACCESS_TOKEN`
@@ -24,4 +26,3 @@ probably refer to the python jira module documentation to generate the oauth tok
 you have a redis server running locally. Once Jeev starts, tell him to resync the jiracache cache
 
     > jeev, resync jiracache cache
-    
