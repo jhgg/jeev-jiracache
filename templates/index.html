@@ -1,0 +1,218 @@
+<html>
+<head>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="{{ url_for('static', filename='bower_components/angular/angular.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='bower_components/angular-sanitize/angular-sanitize.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+</head>
+
+<body ng-app="app">
+{% raw %}
+<div ng-controller="MainCtrl" class="main">
+    <div class="row">
+        <div class="search">
+            <input type="text" ng-model="query"/>
+        </div>
+    </div>
+
+    <div class="row" ng-show="query || 1">
+        <div class="navigator">
+            <ul id="results">
+                <li ng-repeat="result in results" ng-click="setActiveIndex($index)" ng-class="{'focused': $index == activeIndex}">
+                    <img ng-src="{{ result.status.icon }}" class="pull-right" alt="{{ result.status.name }}"/>
+                    <a href="">
+                        <img ng-src="{{ result.type.icon }}" width="16" height="16"/>&nbsp;<span class="issue-link-key">{{ result.key }}</span>
+                        <small ng-if="result.assignee">({{ result.assignee.display_name }})</small>
+                        <br/>
+            <span class="issue-link-summary">
+                {{ result.summary }}
+            </span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div id="issue" ng-if="issue">
+            <header>
+                <img ng-src="{{ issue.fields.project.avatarUrls['48x48'] }}" class="project-avatar"/>
+                <span>
+                    <a href="#" ng-bind="issue.fields.project.name"></a> / {{ issue.key }}
+                </span>
+
+                <h1>{{ issue.fields.summary }}</h1>
+            </header>
+
+            <div class="row">
+                <div class="issue-container clearfix">
+                    <div class="left-col">
+                        <div class="issue-details clearfix">
+                            <div class="issue-title">Details</div>
+                            <div class="issue-separator"></div>
+                            <div class="issue-stat-wrapper clearfix">
+                                <div class="issue-row">
+                                    <div class="issue-stat">
+                                        <span class="issue-stat__label">Type:</span>
+                                    <span class="issue-stat__value">
+                                        <img ng-src="{{ issue.fields.issuetype.iconUrl }}">
+                                        {{ issue.fields.issuetype.name }}
+                                    </span>
+                                    </div>
+                                    <div class="issue-stat">
+                                        <span class="issue-stat__label">Priority:</span>
+                                    <span class="issue-stat__value">
+                                        <img ng-src="{{ issue.fields.priority.iconUrl }}">
+                                        {{ issue.fields.priority.name }}
+                                    </span>
+                                    </div>
+                                    <div class="issue-stat" ng-if="issue.fields.components.length">
+                                        <span class="issue-stat__label">Component/s:</span>
+                                        <span class="issue-stat__value">
+                                            <ul class="components">
+                                                <li ng-repeat="component in issue.fields.components"
+                                                    ng-bind="component.name"></li>
+                                            </ul>
+
+                                        </span>
+                                    </div>
+                                    <div class="issue-stat" ng-if="issue.fields.labels.length">
+                                        <span class="issue-stat__label">Labels:</span>
+                                        <span class="issue-stat__value">
+                                            <ul class="labels">
+                                                <li ng-repeat="label in issue.fields.labels">
+                                                    {{ label }}
+                                                </li>
+                                            </ul>
+                                        </span>
+                                    </div>
+                                    <div class="issue-stat" ng-if="issue.fields.customfield_10002.length">
+                                        <span class="issue-stat__label">Flagged:</span>
+                                        <span class="issue-stat__value">
+                                            <ul class="components">
+                                                <li ng-repeat="label in issue.fields.customfield_10002"
+                                                    ng-bind="label.value">
+                                                </li>
+                                            </ul>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="issue-row">
+                                    <div class="issue-stat">
+                                        <span class="issue-stat__label">Status:</span>
+                                        <span class="issue-stat__value">
+                                            <span class="aui-lozenge jira-issue-status-lozenge jira-issue-status-lozenge-{{ issue.fields.status.statusCategory.colorName }} jira-issue-status-lozenge-{{ issue.fields.status.statusCategory.key }}">
+                                                {{ issue.fields.status.name }}
+                                            </span>
+                                        </span>
+                                    </div>
+                                    <div class="issue-stat">
+                                        <span class="issue-stat__label">Resolution:</span>
+                                        <span class="issue-stat__value" ng-show="issue.fields.resolution">
+                                            {{ issue.fields.resolution.name }}
+                                        </span>
+                                        <span class="issue-stat__value" ng-hide="issue.fields.resolution">
+                                            Unresolved
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="issue-desc clearfix">
+                            <div class="issue-title">Description</div>
+                            <div class="issue-separator"></div>
+                            <div class="issue-stat-wrapper clearfix">
+                                <div class="issue-desc__desc" ng-bind-html="issue.renderedFields.description"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="right-col">
+                        <div class="issue-people clearfix">
+                            <div class="issue-title">People</div>
+                            <div class="issue-separator"></div>
+                            <div class="issue-stat-wrapper clearfix">
+                                <div class="issue-stat issue-stat">
+                                    <span class="issue-stat__label">Assignee:</span>
+                                    <span class="issue-stat__value">
+                                        <span>
+                                            <img ng-src="{{ issue.fields.assignee.avatarUrls['24x24'] }}">
+                                            <span class="issue-user">
+                                                {{ issue.fields.assignee.displayName }}
+                                            </span>
+                                            </span>
+                                    </span>
+                                </div>
+                                <div class="issue-sta issue-stat">
+                                    <span class="issue-stat__label">Reporter:</span>
+                                    <span class="issue-stat__value">
+                                        <span>
+                                            <img ng-src="{{ issue.fields.reporter.avatarUrls['24x24'] }}">
+                                            <span class="issue-user">
+                                                {{ issue.fields.reporter.displayName }}
+                                            </span>
+                                            </span>
+                                    </span>
+                                </div>
+                                <div class="issue-sta issue-stat">
+                                    <span class="issue-stat__label">Votes:</span>
+                                    <span class="issue-stat__value">
+                                        <span class="aui-badge">{{ issue.fields.votes.votes }}</span>
+                                    </span>
+                                </div>
+                                <div class="issue-sta issue-stat">
+                                    <span class="issue-stat__label">Watchers:</span>
+                                    <span class="issue-stat__value">
+                                        <span class="aui-badge">{{ issue.fields.watches.watchCount }}</span>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="issue-dates clearfix">
+                            <div class="issue-title">Dates</div>
+                            <div class="issue-separator"></div>
+                            <div class="issue-stat-wrapper clearfix">
+                                <div class="issue-sta issue-stat">
+                                    <span class="issue-stat__label">Created:</span>
+                                    <span class="issue-stat__value">{{ issue.renderedFields.created }}</span>
+                                </div>
+                                <div class="issue-sta issue-stat">
+                                    <span class="issue-stat__label">Updated:</span>
+                                    <span class="issue-stat__value">{{ issue.renderedFields.updated }}</span>
+                                </div>
+                                <div class="issue-sta issue-stat" ng-if="issue.fields.resolution">
+                                    <span class="issue-stat__label">Resolved:</span>
+                                    <span class="issue-stat__value">{{ issue.renderedFields.resolutiondate }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="issue-time-tracking clearfix">
+                            <div class="issue-title">Time Tracking</div>
+                            <div class="issue-separator"></div>
+                            <div class="issue-stat-wrapper clearfix">
+                                <div class="issue-time-tracking__desc">Blah</div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="welcome" ng-hide="query">
+        <div class="cell">
+            <h2>Enter your query above.</h2>
+        </div>
+    </div>
+
+    <div class="welcome" ng-show="query && !results.length">
+        <div class="cell">
+            <h2>No Results Found!</h2>
+        </div>
+    </div>
+
+</div>
+{% endraw %}
+</body>
+
+</html>
