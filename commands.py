@@ -12,7 +12,7 @@ color_to_hex = {
 }
 
 
-@module.match('(?P<issue_key>[A-Z]+\-\d+)')
+@module.match('(?P<issue_key>[A-Za-z]+\-\d+)')
 @module.async(module.STOP)
 def jira_issue(message, issue_key):
     issue = module.g.index.get_by_key(issue_key.upper(), module.g.index.data_key)
@@ -25,7 +25,7 @@ def jira_issue(message, issue_key):
             .name("jiracache") \
             .field("Summary", fields['summary']) \
             .field("Status", fields['status']['name'], True) \
-            .field("Assignee", fields['assignee']['displayName'], True) \
+            .field("Assignee", fields['assignee'] and fields['assignee']['displayName'] or 'Unassigned', True) \
 
         message.reply_with_attachment(a)
 
